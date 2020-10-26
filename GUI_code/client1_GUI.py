@@ -48,10 +48,16 @@ class MainApp(QMainWindow , FORM_CLASS):
         self.RUN = True
         self.msg = msg
         self.connected = False
-        self.sr = False
-        self.sl = False
-        self.mu = False
-        self.md = False
+        self.sr = False         #slide right flag
+        self.sl = False         #slide left flag
+        self.mu = False         #move up flag
+        self.md = False         #move down flag
+        self.pu = False         #pitch up flag
+        self.pd = False         #pitch down flag
+        self.rolr = False       #roll right flag
+        self.roll = False       #roll left flag
+        self.rotr = False       #rotate right flag
+        self.rotl = False       #rotate left flag
 
         #thread_01 = threading.Thread(target=self.send_msg)
         thread_02 = threading.Thread(target = self.receive, args=())
@@ -328,9 +334,9 @@ class MainApp(QMainWindow , FORM_CLASS):
                     time.sleep(0.15)
 
                 elif event.value == (0,1) and event.joy == 0:             #move up
-                    print("up button is pressed on controller 0")
-                    self.msg = "move up"
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #print("up button is pressed on controller 0")
+                    #self.msg = "move up"
+                    self.server.send("move up".encode(self.FORMAT))
                     self.label_19.setText("Ascending")
                     self.mu = True
                     time.sleep(0.15)
@@ -389,30 +395,49 @@ class MainApp(QMainWindow , FORM_CLASS):
 
             if event.type == JOYAXISMOTION:          
                 if pygame.joystick.Joystick(0).get_axis(0) >= 0.75 :        #rotate right
-                    print("move right from analog 0, controller 0")
-                    self.msg = "move yawcw"
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #print("move right from analog 0, controller 0")
+                    #self.msg = "move yawcw"
+                    self.server.send("move yawcw".encode(self.FORMAT))
                     self.label_19.setText("Rotating right")
+                    self.rotr = True
                     time.sleep(0.15)
                 
                 elif pygame.joystick.Joystick(0).get_axis(0) <= -0.75 :       #rotate left
-                    print("move left from analog 0, controller 0")
-                    self.msg = "move yawccw"
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #print("move left from analog 0, controller 0")
+                    #self.msg = "move yawccw"
+                    self.server.send("move yawccw".encode(self.FORMAT))
                     self.label_19.setText("Rotating left")
+                    self.rotr = True
                     time.sleep(0.15)
 
                 elif pygame.joystick.Joystick(0).get_axis(1) >= 0.75 :        #move backward
-                    print("move backward from analog 0, controller 0")
-                    self.msg = "move backward"
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #print("move backward from analog 0, controller 0")
+                    #self.msg = "move backward"
+                    # if self.rotr == True:
+                    #     self.server.send("done pitchup".encode(self.FORMAT))
+                    #     self.rotr = False
+                    #     time.sleep(0.15)
+                    # if self.rotl == True:
+                    #     self.server.send("done pitchup".encode(self.FORMAT))
+                    #     self.rotl = False
+                    #     time.sleep(0.15)
+                    self.server.send("move backward".encode(self.FORMAT))
                     self.label_19.setText("Moving backward")
                     time.sleep(0.15)
 
+
                 elif pygame.joystick.Joystick(0).get_axis(1) <= -0.75 :       #move forward
-                    print("move forward from analog 0, controller 0")
-                    self.msg = "move forward"
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #print("move forward from analog 0, controller 0")
+                    #self.msg = "move forward"
+                    # if self.rotr == True:
+                    #     self.server.send("done pitchup".encode(self.FORMAT))
+                    #     self.rotr = False
+                    #     time.sleep(0.15)
+                    # if self.rotl == True:
+                    #     self.server.send("done pitchup".encode(self.FORMAT))
+                    #     self.rotl = False
+                    #     time.sleep(0.15)
+                    self.server.send("move forward".encode(self.FORMAT))
                     self.label_19.setText("Moving forward")
                     time.sleep(0.15)
 
@@ -443,43 +468,89 @@ class MainApp(QMainWindow , FORM_CLASS):
 
                 
                 if pygame.joystick.Joystick(0).get_axis(3) >= 0.75 :        #roll right
-                    print("move right from analog 1, controller 0")
-                    self.msg = "move rolltoright"
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #print("move right from analog 1, controller 0")
+                    #self.msg = "move rolltoright"
+                    # if self.pd == True:
+                    #     self.server.send("done pitchdown".encode(self.FORMAT))
+                    #     self.pd = False
+                    #     time.sleep(0.15)
+                    # if self.pu == True:
+                    #     self.server.send("done pitchup".encode(self.FORMAT))
+                    #     self.pu = False
+                    #     time.sleep(0.15)
+                    self.server.send("move rolltoright".encode(self.FORMAT))
                     self.label_19.setText("Rolling right")
+                    self.rolr = True
                     time.sleep(0.15)
                 
+
+
                 elif pygame.joystick.Joystick(0).get_axis(3) <= -0.75 :       #roll left
-                    print("move left from analog 1, controller 0")
-                    self.msg = "move rolltoleft"
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #print("move left from analog 1, controller 0")
+                    #self.msg = "move rolltoleft"
+                    # if self.pd == True:
+                    #     self.server.send("done pitchdown".encode(self.FORMAT))
+                    #     self.pd = False
+                    #     time.sleep(0.15)
+                    # if self.pu == True:
+                    #     self.server.send("done pitchup".encode(self.FORMAT))
+                    #     self.pu = False
+                    #     time.sleep(0.15)
+                    self.server.send("move rolltoleft".encode(self.FORMAT))
                     self.label_19.setText("Rolling left")
+                    self.roll = True
                     time.sleep(0.15)
+
+
 
                 elif pygame.joystick.Joystick(0).get_axis(2) >= 0.75 :        #pitch up
-                    print("move down from analog 1, controller 0")
-                    self.msg = "move pitchup"
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #print("move down from analog 1, controller 0")
+                    #self.msg = "move pitchup"
+                    # if self.rolr == True:
+                    #     self.server.send("done rollright".encode(self.FORMAT))
+                    #     self.rolr = False
+                    #     time.sleep(0.15)
+                    # if self.roll == True:
+                    #     self.server.send("done rollleft".encode(self.FORMAT))
+                    #     self.roll = False
+                    #     time.sleep(0.15)
+
+                    self.server.send("move pitchup".encode(self.FORMAT))
                     self.label_19.setText("Pitching up")
+                    self.pu = True
                     time.sleep(0.15)
 
+
+
                 elif pygame.joystick.Joystick(0).get_axis(2) <= -0.75 :       #pitch down
-                    print("move up from analog 1, controller 0")
-                    self.msg = "move pitchdown"
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #print("move up from analog 1, controller 0")
+                    #self.msg = "move pitchdown"
+                    # if self.rolr == True:
+                    #     self.server.send("done rollright".encode(self.FORMAT))
+                    #     self.rolr = False
+                    #     time.sleep(0.15)
+                    # if self.roll == True:
+                    #     self.server.send("done rollleft".encode(self.FORMAT))
+                    #     self.roll = False
+                    #     time.sleep(0.15)
+                    self.server.send("move pitchdown".encode(self.FORMAT))
                     self.label_19.setText("Pitching down")
+                    self.pd = True
                     time.sleep(0.15)
+
+
 
                 elif ((pygame.joystick.Joystick(0).get_axis(0) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(0) <= 0.1) and 
                     (pygame.joystick.Joystick(0).get_axis(1) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(1) <= 0.1)  and
                     (pygame.joystick.Joystick(0).get_axis(3) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(3) <= 0.1)  and 
                     (pygame.joystick.Joystick(0).get_axis(2) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(2) <= 0.1))  :     #stops motion if both analogs are not at motion positions
-                    self.msg = "move stop"
-                    print(self.msg + " : from analog 0 controller 0")
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #self.msg = "move stop"
+                    print("move stop" + " : from analog 0 controller 0")
+                    self.server.send("move stop".encode(self.FORMAT))
                     self.label_19.setText("Static")
                     time.sleep(0.25)
 
+                    
 
                 # if pygame.joystick.Joystick(1).get_axis(3) >= 0.75 :
                 #     print("move right from analog 1, controller 1")
