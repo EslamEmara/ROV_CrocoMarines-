@@ -48,6 +48,10 @@ class MainApp(QMainWindow , FORM_CLASS):
         self.RUN = True
         self.msg = msg
         self.connected = False
+        self.sr = False
+        self.sl = False
+        self.mu = False
+        self.md = False
 
         #thread_01 = threading.Thread(target=self.send_msg)
         thread_02 = threading.Thread(target = self.receive, args=())
@@ -301,23 +305,26 @@ class MainApp(QMainWindow , FORM_CLASS):
 
                 if event.value == (1,0) and event.joy == 0:             #slide right
                     print("right button is pressed on controller 0")
-                    self.msg = "move right"
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #self.msg = "move right"
+                    self.server.send("move right".encode(self.FORMAT))
                     self.label_19.setText("Sliding right")
+                    self.sr = True
                     time.sleep(0.15)
 
                 elif event.value == (-1,0) and event.joy == 0:            #slide left
                     print("left button is pressed on controller 0")
-                    self.msg = "move left"
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #self.msg = "move left"
+                    self.server.send("move left".encode(self.FORMAT))
                     self.label_19.setText("Sliding left")
+                    self.sl = True
                     time.sleep(0.15)
 
                 elif event.value == (0,-1) and event.joy == 0:            #move down
                     print("down button is pressed on controller 0")
-                    self.msg = "move down"
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #self.msg = "move down"
+                    self.server.send("move down".encode(self.FORMAT))
                     self.label_19.setText("Descending")
+                    self.md = True
                     time.sleep(0.15)
 
                 elif event.value == (0,1) and event.joy == 0:             #move up
@@ -325,13 +332,33 @@ class MainApp(QMainWindow , FORM_CLASS):
                     self.msg = "move up"
                     self.server.send(self.msg.encode(self.FORMAT))
                     self.label_19.setText("Ascending")
+                    self.mu = True
                     time.sleep(0.15)
 
                 elif event.value == (0,0) and event.joy == 0:           #stops motion when you remove your hard from button
-                    self.msg = "move stop"
-                    self.server.send(self.msg.encode(self.FORMAT))
+                    #self.msg = "move stop"
+                    self.server.send("move stop".encode(self.FORMAT))
                     self.label_19.setText("Static")
-                    time.sleep(0.15)
+                    time.sleep(0.25)
+
+                    if self.sr == True:
+                        self.server.send("done slideright".encode(self.FORMAT))
+                        self.sr = False
+                        time.sleep(0.15)
+                    if self.sl == True:
+                        self.server.send("done slideleft".encode(self.FORMAT))
+                        self.sl = False
+                        time.sleep(0.15)
+                    if self.mu == True:
+                        self.server.send("done moveup".encode(self.FORMAT))
+                        self.mu = False
+                        time.sleep(0.15)
+                    if self.md == True:
+                        self.server.send("done movedown".encode(self.FORMAT))
+                        self.md = False
+                        time.sleep(0.15)
+
+                    
 
 
                 # if event.value == (1,0) and event.joy == 1:
@@ -451,7 +478,7 @@ class MainApp(QMainWindow , FORM_CLASS):
                     print(self.msg + " : from analog 0 controller 0")
                     self.server.send(self.msg.encode(self.FORMAT))
                     self.label_19.setText("Static")
-                    time.sleep(0.15)
+                    time.sleep(0.25)
 
 
                 # if pygame.joystick.Joystick(1).get_axis(3) >= 0.75 :

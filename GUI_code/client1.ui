@@ -329,7 +329,7 @@ background-color: rgba(255, 255, 255,2);</string>
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../GUI materials/image.png</pixmap>
+     <pixmap>image.png</pixmap>
     </property>
    </widget>
    <widget class="QLabel" name="label">
