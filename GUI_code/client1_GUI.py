@@ -12,7 +12,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import QCoreApplication
 
 FORM_CLASS, _ = loadUiType(path.join(path.dirname(__file__), "client1.ui"))
@@ -24,6 +24,7 @@ class MainApp(QMainWindow , FORM_CLASS):
 
         self.FORMAT = 'utf-8'
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #self.server.setblocking(False)
 
         pygame.init()
         self.screen = pygame.display.set_mode((1,1))
@@ -39,7 +40,7 @@ class MainApp(QMainWindow , FORM_CLASS):
             print("initialized joystick",i)
 
         self.speed = 0
-        # self.RUN = True
+        #self.RUN = True
         self.msg = msg
         self.connected = False
         
@@ -50,10 +51,22 @@ class MainApp(QMainWindow , FORM_CLASS):
         self.Handel_UI()
         self.Handel_Buttons()
 
-    def Handel_UI(self):
-        self.setWindowTitle('GUI test')
-        self.setFixedSize(747, 430)
+    def closeEvent(self, event):
+        reply = QMessageBox.question(self, 'Close Confirmation', 'Are you sure you want to close?',
+            	QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
+        if reply == QMessageBox.Yes:
+            event.accept()
+            if self.connected:
+                self.msg = "[DISCONNECTING] Disconnecting Client."
+                self.server.send(self.msg.encode(self.FORMAT))
+                self.server.close()
+        else:
+            event.ignore()
+
+    def Handel_UI(self):
+        self.setWindowTitle('Croco GUI')
+        self.setFixedSize(747, 530)
         self.lineEdit_2.setMaxLength(5)
         self.lineEdit.setMaxLength(13)
         self.lineEdit_2.setValidator(QIntValidator())
@@ -76,25 +89,22 @@ class MainApp(QMainWindow , FORM_CLASS):
             self.label_5.setText("")
             self.label_7.setText("")
             self.label_6.setText("")
+            time.sleep(1)
         else:
             pass
         
     def start(self):
         try:
-            PORT = self.lineEdit_2.text()
-            PORT = int(PORT)
+            PORT = int(self.lineEdit_2.text())
             IP = self.lineEdit.text()
-            ADDR = (IP, PORT)
-
-            self.server.connect(ADDR)
-            print(f"[CONNECTION] successfully connected to {ADDR} \n")
+            self.server.connect((IP, PORT))
+            print(f"[CONNECTION] successfully connected to {(IP, PORT)} \n")
             self.connected = True
         except:
             pass
 
         if self.connected == True:
             self.label_14.setText("Connected")
-            self.label_4.setText("90")
             self.lineEdit_2.setReadOnly(True)
             self.lineEdit.setReadOnly(True)
             
@@ -103,15 +113,10 @@ class MainApp(QMainWindow , FORM_CLASS):
     def send_msg(self):
         for event in pygame.event.get():
 
-            # if event.type == pygame.QUIT:
-            #     print ("Received event 'Quit', exiting.")
-            #     break
-
             if event.type == KEYDOWN and event.key == K_KP_ENTER :
                 self.start()
 
             if event.type == JOYBUTTONDOWN:
-
                 # if event.button == 0 and event.joy == 0:        
                 #     print("button 0 is pressed on controller 0")
                 #     self.msg = "button 0 is pressed on controller 0"
@@ -124,8 +129,11 @@ class MainApp(QMainWindow , FORM_CLASS):
                 #     self.server.send(self.msg.encode(self.FORMAT))
                 #     time.sleep(0.15)
 
-                #if event.button == 2 and event.joy == 0:        #connects when pressing x button on controller 0    
-                    #self.start()
+                #if event.button == 2 and event.joy == 0:            
+                #     print("button 0 is pressed on controller 0")
+                #     self.msg = "button 0 is pressed on controller 0"
+                #     self.server.send(self.msg.encode(self.FORMAT))
+                #     time.sleep(0.15)
 
                 # if event.button == 3 and event.joy == 0:
                 #     print("button 3 is pressed on controller 0")
@@ -133,31 +141,27 @@ class MainApp(QMainWindow , FORM_CLASS):
                 #     self.server.send(self.msg.encode(self.FORMAT))
                 #     time.sleep(0.15)
 
-                # if event.button == 4 and event.joy == 0:
-                #     print("button 4 is pressed on controller 0")
-                #     self.msg = "button 4 is pressed on controller 0"
-                #     self.server.send(self.msg.encode(self.FORMAT))
-                #     time.sleep(0.15)
+                if event.button == 4 and event.joy == 0:         #camera up with L1 when pressed
+                    self.server.send("cam up".encode(self.FORMAT))
+                    time.sleep(0.15)
 
-                # if event.button == 5 and event.joy == 0:
-                #     print("button 5 is pressed on controller 0")
-                #     self.msg = "button 5 is pressed on controller 0"
-                #     self.server.send(self.msg.encode(self.FORMAT))
-                #     time.sleep(0.15)
-
-                if event.button == 6 and event.joy == 0:            #speed down
-                    self.speed = self.speed - 30
-                    if self.speed <= 0 :
-                        self.speed = 0
+                if event.button == 5 and event.joy == 0:        #speed up with R1 when pressed
+                    self.speed = self.speed +30
+                    if self.speed >= 150 :
+                        self.speed = 150
                     self.msg = "speed " + str(self.speed)
                     self.server.send(self.msg.encode(self.FORMAT))
                     self.label_4.setText(str(self.speed+90))
                     time.sleep(0.15)
+
+                if event.button == 6 and event.joy == 0:           #camera down with L2 when pressed
+                    self.server.send("cam down".encode(self.FORMAT)) 
+                    time.sleep(0.15)       
                     
-                if event.button == 7 and event.joy == 0:            #speed up                
-                    self.speed = self.speed +30
-                    if self.speed >= 150 :
-                        self.speed = 150
+                if event.button == 7 and event.joy == 0:         #speed down with R2 when pressed           
+                    self.speed = self.speed - 30
+                    if self.speed <= 0 :
+                        self.speed = 0
                     self.msg = "speed " + str(self.speed)
                     self.server.send(self.msg.encode(self.FORMAT))
                     self.label_4.setText(str(self.speed+90))
@@ -169,7 +173,7 @@ class MainApp(QMainWindow , FORM_CLASS):
                 #     self.server.send(self.msg.encode(self.FORMAT))
                 #     time.sleep(0.15)
                     
-                if event.button == 9 and event.joy == 0:        #connects when pressing start button on controller 0   
+                if event.button == 9 and event.joy == 0:        #connects when start button on controller 0 is pressed 
                     self.start()
 
                 # if event.button == 10 and event.joy == 0:
@@ -183,6 +187,17 @@ class MainApp(QMainWindow , FORM_CLASS):
                 #     self.msg = "button 11 is pressed on controller 0"
                 #     self.server.send(self.msg.encode(self.FORMAT))
                 #     time.sleep(0.15)
+
+#############################################################################################################
+
+            if event.type == JOYBUTTONUP:
+                if event.button == 4 and event.joy == 0:         #camera stops when L1 is released
+                    self.server.send("cam stop".encode(self.FORMAT))
+                    time.sleep(0.15)
+
+                if event.button == 6 and event.joy == 0:           #camera stops when L2 is released
+                    self.server.send("cam stop".encode(self.FORMAT)) 
+                    time.sleep(0.15) 
                     
 #############################################################################################################
 
@@ -216,114 +231,102 @@ class MainApp(QMainWindow , FORM_CLASS):
 
             if event.type == JOYAXISMOTION:          
                 if pygame.joystick.Joystick(0).get_axis(0) >= 0.95 :        #rotate right
-                    #self.msg = "move yawcw"
                     self.server.send("move yawcw".encode(self.FORMAT))
                     self.label_19.setText("Rotating right")
                     time.sleep(0.15)
                 
-                elif pygame.joystick.Joystick(0).get_axis(0) <= -0.95 :       #rotate left
-                    #self.msg = "move yawccw"
+                elif pygame.joystick.Joystick(0).get_axis(0) <= -1 :       #rotate left
                     self.server.send("move yawccw".encode(self.FORMAT))
                     self.label_19.setText("Rotating left")
                     time.sleep(0.15)
 
                 elif pygame.joystick.Joystick(0).get_axis(1) >= 0.95 :        #move backward
-                    #self.msg = "move backward"
                     self.server.send("move backward".encode(self.FORMAT))
                     self.label_19.setText("Moving backward")
                     time.sleep(0.15)
 
-                elif pygame.joystick.Joystick(0).get_axis(1) <= -0.95 :       #move forward
-                    #self.msg = "move forward"
+                elif pygame.joystick.Joystick(0).get_axis(1) <= -1 :       #move forward
                     self.server.send("move forward".encode(self.FORMAT))
                     self.label_19.setText("Moving forward")
                     time.sleep(0.15)
-
                 
-                if pygame.joystick.Joystick(0).get_axis(3) >= 0.9 :        #roll right
-                    #self.msg = "move rolltoright"
+                elif pygame.joystick.Joystick(0).get_axis(3) >= 0.95 :        #roll right
                     self.server.send("move rolltoright".encode(self.FORMAT))
                     self.label_19.setText("Rolling right")
                     time.sleep(0.15)
                 
-                elif pygame.joystick.Joystick(0).get_axis(3) <= -0.9 :       #roll left
-                    #self.msg = "move rolltoleft"
+                elif pygame.joystick.Joystick(0).get_axis(3) <= -1 :       #roll left
                     self.server.send("move rolltoleft".encode(self.FORMAT))
                     self.label_19.setText("Rolling left")
                     time.sleep(0.15)
 
-                elif pygame.joystick.Joystick(0).get_axis(2) >= 0.9 :        #pitch up
-                    #self.msg = "move pitchup"
+                elif pygame.joystick.Joystick(0).get_axis(2) >= 0.95 :        #pitch up
                     self.server.send("move pitchup".encode(self.FORMAT))
                     self.label_19.setText("Pitching up")
                     time.sleep(0.15)
 
-                elif pygame.joystick.Joystick(0).get_axis(2) <= -0.9 :       #pitch down
-                    #self.msg = "move pitchdown"
+                elif pygame.joystick.Joystick(0).get_axis(2) <= -1 :       #pitch down
                     self.server.send("move pitchdown".encode(self.FORMAT))
                     self.label_19.setText("Pitching down")
                     time.sleep(0.15)
 
-                elif ((pygame.joystick.Joystick(0).get_axis(0) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(0) <= 0.2) and 
-                    (pygame.joystick.Joystick(0).get_axis(1) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(1) <= 0.2)  and
-                    (pygame.joystick.Joystick(0).get_axis(3) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(3) <= 0.2)  and 
-                    (pygame.joystick.Joystick(0).get_axis(2) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(2) <= 0.2))  :     #stops motion if both analogs are not at motion positions
-                    #self.msg = "move stop"
+                elif ((pygame.joystick.Joystick(0).get_axis(0) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(0) <= 0.1) and 
+                    (pygame.joystick.Joystick(0).get_axis(1) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(1) <= 0.1)  and
+                    (pygame.joystick.Joystick(0).get_axis(3) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(3) <= 0.1)  and 
+                    (pygame.joystick.Joystick(0).get_axis(2) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(2) <= 0.1))  :     #stops motion if both analogs are not at motion positions
                     self.server.send("move stop".encode(self.FORMAT))
                     self.label_19.setText("Static")
                     time.sleep(0.15)
 
 ###################################################################################################
-                # if pygame.joystick.Joystick(1).get_axis(0) >= 0.75 :        
+                # if pygame.joystick.Joystick(1).get_axis(0) >= 1 :        
                 #     print("move right from analog 0, controller 1")
                 #     msg = "move right from analog 0, controller 1"
                 #     server.send(msg.encode(FORMAT))
                 #     time.sleep(0.15)
                 
-                # if pygame.joystick.Joystick(1).get_axis(0) <= -0.75 :
+                # if pygame.joystick.Joystick(1).get_axis(0) <= -1 :
                 #     print("move left from analog 0, controller 1")
                 #     msg = "move left from analog 0, controller 1"
                 #     server.send(msg.encode(FORMAT))
                 #     time.sleep(0.15)
 
-                # if pygame.joystick.Joystick(1).get_axis(1) >= 0.75 :
+                # if pygame.joystick.Joystick(1).get_axis(1) >= 1 :
                 #     print("move down from analog 0, controller 1")
                 #     msg = "move down from analog 0, controller 1"
                 #     server.send(msg.encode(FORMAT))
                 #     time.sleep(0.15)
 
-                # if pygame.joystick.Joystick(1).get_axis(1) <= -0.75 :
+                # if pygame.joystick.Joystick(1).get_axis(1) <= -1 :
                 #     print("move up from analog 0, controller 1")
                 #     msg = "move up from analog 0, controller 1"
                 #     server.send(msg.encode(FORMAT))
                 #     time.sleep(0.15)
 
-                # if pygame.joystick.Joystick(1).get_axis(3) >= 0.75 :
+                # if pygame.joystick.Joystick(1).get_axis(3) >= 1 :
                 #     print("move right from analog 1, controller 1")
                 #     msg = "move right from analog 1, controller 1"
                 #     server.send(msg.encode(FORMAT))
                 #     time.sleep(0.15)
                 
-                # if pygame.joystick.Joystick(1).get_axis(3) <= -0.75 :
+                # if pygame.joystick.Joystick(1).get_axis(3) <= -1 :
                 #     print("move left from analog 1, controller 1")
                 #     msg = "move left from analog 1, controller 1"
                 #     server.send(msg.encode(FORMAT))
                 #     time.sleep(0.15)
 
-                # if pygame.joystick.Joystick(1).get_axis(2) >= 0.75 :
+                # if pygame.joystick.Joystick(1).get_axis(2) >= 1 :
                 #     print("move down from analog 1, controller 1")
                 #     msg = "move down from analog 1, controller 1"
                 #     server.send(msg.encode(FORMAT))
                 #     time.sleep(0.15)
 
-                # if pygame.joystick.Joystick(1).get_axis(2) <= -0.75 :
+                # if pygame.joystick.Joystick(1).get_axis(2) <= -1 :
                 #     print("move up from analog 1, controller 1")
                 #     msg = "move up from analog 1, controller 1"
                 #     server.send(msg.encode(FORMAT))
                 #     time.sleep(0.15)
 
-
-###################################################################################################
 ###################################################################################################
 
     def receive(self):
@@ -352,8 +355,6 @@ class MainApp(QMainWindow , FORM_CLASS):
                     hight = self.msg.split()
                     self.label_6.setText(hight[1])
 
-
-###################################################################################################
 ###################################################################################################
 
 if __name__ == "__main__":
@@ -361,12 +362,11 @@ if __name__ == "__main__":
     window = MainApp("")  #object
     window.show()       #shows the window
     #app.exec_()         #infinite loop
-    
-    #while True:
     while True:
         try:
             window.send_msg()
         except:
             pass
-
     sys.exit(app.exec_())
+
+###################################################################################################

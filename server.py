@@ -8,7 +8,7 @@ import threading
 IP = socket.gethostbyname(socket.gethostname())
 PORT = 8000
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)	#solves problem when port is already taken
 server.bind((IP, PORT))
 
 server.listen(100)

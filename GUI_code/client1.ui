@@ -7,11 +7,15 @@
     <x>0</x>
     <y>0</y>
     <width>745</width>
-    <height>433</height>
+    <height>529</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>Daco_4577815.png</normaloff>Daco_4577815.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">
@@ -164,7 +168,7 @@ font: 75 italic 14pt &quot;Comic Sans MS&quot;;
     padding: 2px;</string>
     </property>
     <property name="text">
-     <string/>
+     <string>90</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
@@ -732,9 +736,9 @@ font: 75 italic 14pt &quot;Comic Sans MS&quot;;
    <widget class="QLabel" name="label_18">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>340</y>
-      <width>151</width>
+      <width>201</width>
       <height>41</height>
      </rect>
     </property>
@@ -759,13 +763,13 @@ font: 75 italic 14pt &quot;Comic Sans MS&quot;;
         );</string>
     </property>
     <property name="text">
-     <string>Current motion:</string>
+     <string>ROV Current motion:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_19">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>210</x>
       <y>340</y>
       <width>171</width>
       <height>41</height>
@@ -794,14 +798,76 @@ font: 75 italic 14pt &quot;Comic Sans MS&quot;;
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>330</y>
+      <x>610</x>
+      <y>430</y>
       <width>121</width>
       <height>46</height>
      </rect>
     </property>
     <property name="text">
      <string>Disconnect</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_20">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>340</y>
+      <width>211</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"> color: #c9c5c5;
+	
+font: 75 italic 14pt &quot;Comic Sans MS&quot;;
+
+    border: 0.25px solid #810303;
+    border-radius: 10px;
+    border-style: outset;
+	background-color:rgba(2,23,1,5) ;
+    
+
+	
+    padding: 2px;
+
+
+/*background: qradialgradient(
+        cx: 0.2, cy: -0.3, fx: 0.2, fy: -0.2,
+        radius: 1.35, stop: 0 #199612, stop: 1 #000000
+        );</string>
+    </property>
+    <property name="text">
+     <string>μROV Current motion:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_21">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>340</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"> color: #c9c5c5;
+	
+font: 75 italic 14pt &quot;Comic Sans MS&quot;;
+
+    border: 0.25px solid #810303;
+    border-radius: 10px;
+    border-style: outset;
+    background: qradialgradient(
+        cx: 0.2, cy: -0.3, fx: 0.2, fy: -0.2,
+        radius: 1.35, stop: 0 #199612, stop: 1 #000000
+        );
+
+	
+    padding: 2px;</string>
+    </property>
+    <property name="text">
+     <string>Static</string>
     </property>
    </widget>
   </widget>
