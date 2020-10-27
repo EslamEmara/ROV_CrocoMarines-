@@ -24,11 +24,9 @@ class MainApp(QMainWindow , FORM_CLASS):
     def __init__(self, msg, parent=None):
         super(MainApp , self).__init__(parent)
         QMainWindow.__init__(self)
-        # self.PORT = 8000
+
         self.FORMAT = 'utf-8'
         self.DISCONNECT_MSG = "!DISCONNECT"
-        # self.IP = socket.gethostbyname(socket.gethostname())
-        # self.ADDR = (self.IP,self.PORT)
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         pygame.init()
@@ -48,27 +46,13 @@ class MainApp(QMainWindow , FORM_CLASS):
         self.RUN = True
         self.msg = msg
         self.connected = False
-        self.sr = False         #slide right flag
-        self.sl = False         #slide left flag
-        self.mu = False         #move up flag
-        self.md = False         #move down flag
-        self.pu = False         #pitch up flag
-        self.pd = False         #pitch down flag
-        self.rolr = False       #roll right flag
-        self.roll = False       #roll left flag
-        self.rotr = False       #rotate right flag
-        self.rotl = False       #rotate left flag
-
-        #thread_01 = threading.Thread(target=self.send_msg)
-        thread_02 = threading.Thread(target = self.receive, args=())
         
-        #thread_01.start()
+        thread_02 = threading.Thread(target = self.receive, args=())
         thread_02.start()
 
         self.setupUi(self)
         self.Handel_UI()
         self.Handel_Buttons()
-
 
     def Handel_UI(self):
         self.setWindowTitle('GUI test')
@@ -77,8 +61,6 @@ class MainApp(QMainWindow , FORM_CLASS):
         self.lineEdit_2.setMaxLength(5)
         self.lineEdit.setMaxLength(13)
         self.lineEdit_2.setValidator(QIntValidator())
-        #self.lineEdit.setValidator(QIntValidator())
-
 
     def Handel_Buttons(self):
         self.pushButton.clicked.connect(self.start)
@@ -101,7 +83,6 @@ class MainApp(QMainWindow , FORM_CLASS):
         else:
             pass
         
-
     def start(self):
         try:
             
@@ -121,13 +102,9 @@ class MainApp(QMainWindow , FORM_CLASS):
             self.lineEdit_2.setReadOnly(True)
             self.lineEdit.setReadOnly(True)
             
-
-
 ###################################################################################################
-###################################################################################################
+
     def send_msg(self):
-        # global RUN
-        # global speed
         for event in pygame.event.get():
 
             # if event.type == pygame.QUIT:
@@ -142,49 +119,46 @@ class MainApp(QMainWindow , FORM_CLASS):
             #     self.RUN = False
             #     break
 
-
             if event.type == JOYBUTTONDOWN:
 
-                if event.button == 0 and event.joy == 0:        
-                    print("button 0 is pressed on controller 0")
-                    self.msg = "button 0 is pressed on controller 0"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    time.sleep(0.25)
+                # if event.button == 0 and event.joy == 0:        
+                #     print("button 0 is pressed on controller 0")
+                #     self.msg = "button 0 is pressed on controller 0"
+                #     self.server.send(self.msg.encode(self.FORMAT))
+                #     time.sleep(0.25)
 
-                if event.button == 1 and event.joy == 0:
-                    print("button 1 is pressed on controller 0")
-                    self.msg = "button 1 is pressed on controller 0"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    time.sleep(0.25)
+                # if event.button == 1 and event.joy == 0:
+                #     print("button 1 is pressed on controller 0")
+                #     self.msg = "button 1 is pressed on controller 0"
+                #     self.server.send(self.msg.encode(self.FORMAT))
+                #     time.sleep(0.25)
 
-                if event.button == 2 and event.joy == 0:        
-                    print("button 2 is pressed on controller 0")
-                    self.msg = "button 2 is pressed on controller 0"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    time.sleep(0.25)
+                # if event.button == 2 and event.joy == 0:        
+                #     print("button 2 is pressed on controller 0")
+                #     self.msg = "button 2 is pressed on controller 0"
+                #     self.server.send(self.msg.encode(self.FORMAT))
+                #     time.sleep(0.25)
 
-                if event.button == 3 and event.joy == 0:
-                    print("button 3 is pressed on controller 0")
-                    self.msg = "button 3 is pressed on controller 0"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    time.sleep(0.25)
+                # if event.button == 3 and event.joy == 0:
+                #     print("button 3 is pressed on controller 0")
+                #     self.msg = "button 3 is pressed on controller 0"
+                #     self.server.send(self.msg.encode(self.FORMAT))
+                #     time.sleep(0.25)
 
-                if event.button == 4 and event.joy == 0:
-                    print("button 4 is pressed on controller 0")
-                    self.msg = "button 4 is pressed on controller 0"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    time.sleep(0.25)
+                # if event.button == 4 and event.joy == 0:
+                #     print("button 4 is pressed on controller 0")
+                #     self.msg = "button 4 is pressed on controller 0"
+                #     self.server.send(self.msg.encode(self.FORMAT))
+                #     time.sleep(0.25)
 
-                if event.button == 5 and event.joy == 0:
-                    print("button 5 is pressed on controller 0")
-                    self.msg = "button 5 is pressed on controller 0"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    time.sleep(0.25)
+                # if event.button == 5 and event.joy == 0:
+                #     print("button 5 is pressed on controller 0")
+                #     self.msg = "button 5 is pressed on controller 0"
+                #     self.server.send(self.msg.encode(self.FORMAT))
+                #     time.sleep(0.25)
 
                 if event.button == 6 and event.joy == 0:            #speed down
-                    #print("button 6 is pressed on controller 0")
                     self.speed = self.speed - 30
-                    #print("speed decreased by 30, new value:",speed+1500)
                     if self.speed <= 0 :
                         self.speed = 0
                     self.msg = "speed " + str(self.speed)
@@ -193,11 +167,8 @@ class MainApp(QMainWindow , FORM_CLASS):
                     self.label_4.setText(str(self.speed))
                     time.sleep(0.25)
                     
-
                 if event.button == 7 and event.joy == 0:                #speed up                
-                    #print("button 7 is pressed on controller 0")
                     self.speed = self.speed +30
-                    #print("speed increased by 30, new value:",speed+1500)
                     if self.speed >= 400 :
                         self.speed = 400
                     self.msg = "speed " + str(self.speed)
@@ -206,176 +177,121 @@ class MainApp(QMainWindow , FORM_CLASS):
                     self.label_4.setText(str(self.speed))
                     time.sleep(0.25)
                 
-
-                if event.button == 8 and event.joy == 0:
-                    print("button 8 is pressed on controller 0")
-                    self.msg = "button 8 is pressed on controller 0"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    time.sleep(0.25)
+                # if event.button == 8 and event.joy == 0:
+                #     print("button 8 is pressed on controller 0")
+                #     self.msg = "button 8 is pressed on controller 0"
+                #     self.server.send(self.msg.encode(self.FORMAT))
+                #     time.sleep(0.25)
                     
+                # if event.button == 9 and event.joy == 0:
+                #     print("button 9 is pressed on controller 0")
+                #     self.msg = "button 9 is pressed on controller 0"
+                #     self.server.send(self.msg.encode(self.FORMAT))
+                #     time.sleep(0.25)
 
-                if event.button == 9 and event.joy == 0:
-                    print("button 9 is pressed on controller 0")
-                    self.msg = "button 9 is pressed on controller 0"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    time.sleep(0.25)
+                # if event.button == 10 and event.joy == 0:
+                #     print("button 10 is pressed on controller 0")
+                #     self.msg = "button 10 is pressed on controller 0"
+                #     self.server.send(self.msg.encode(self.FORMAT))
+                #     time.sleep(0.25)
 
-                if event.button == 10 and event.joy == 0:
-                    print("button 10 is pressed on controller 0")
-                    self.msg = "button 10 is pressed on controller 0"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    time.sleep(0.25)
-
-                if event.button == 11 and event.joy == 0:
-                    print("button 11 is pressed on controller 0")
-                    self.msg = "button 11 is pressed on controller 0"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    time.sleep(0.25)
+                # if event.button == 11 and event.joy == 0:
+                #     print("button 11 is pressed on controller 0")
+                #     self.msg = "button 11 is pressed on controller 0"
+                #     self.server.send(self.msg.encode(self.FORMAT))
+                #     time.sleep(0.25)
                     
-
-    ###################################################################################################
+#############################################################################################################
 
             if event.type == JOYHATMOTION:
-
                 if event.value == (1,0) and event.joy == 0:             #slide right
                     print("right button is pressed on controller 0")
-                    #self.msg = "move right"
                     self.server.send("move right".encode(self.FORMAT))
                     self.label_19.setText("Sliding right")
-                    self.sr = True
                     time.sleep(0.25)
 
                 elif event.value == (-1,0) and event.joy == 0:            #slide left
-                    print("left button is pressed on controller 0")
-                    #self.msg = "move left"
                     self.server.send("move left".encode(self.FORMAT))
                     self.label_19.setText("Sliding left")
-                    self.sl = True
                     time.sleep(0.25)
 
                 elif event.value == (0,-1) and event.joy == 0:            #move down
-                    print("down button is pressed on controller 0")
-                    #self.msg = "move down"
                     self.server.send("move down".encode(self.FORMAT))
                     self.label_19.setText("Descending")
-                    self.md = True
                     time.sleep(0.25)
 
                 elif event.value == (0,1) and event.joy == 0:             #move up
-                    #print("up button is pressed on controller 0")
-                    #self.msg = "move up"
                     self.server.send("move up".encode(self.FORMAT))
                     self.label_19.setText("Ascending")
-                    self.mu = True
                     time.sleep(0.25)
 
                 elif event.value == (0,0) and event.joy == 0:           #stops motion when you remove your hard from button
+                    self.server.send("move stop".encode(self.FORMAT))
+                    self.label_19.setText("Static")
+                    time.sleep(0.25)
+
+    ###################################################################################################
+
+            if event.type == JOYAXISMOTION:          
+                if pygame.joystick.Joystick(0).get_axis(0) >= 0.95 :        #rotate right
+                    #self.msg = "move yawcw"
+                    self.server.send("move yawcw".encode(self.FORMAT))
+                    self.label_19.setText("Rotating right")
+                    time.sleep(0.25)
+                
+                elif pygame.joystick.Joystick(0).get_axis(0) <= -0.95 :       #rotate left
+                    #self.msg = "move yawccw"
+                    self.server.send("move yawccw".encode(self.FORMAT))
+                    self.label_19.setText("Rotating left")
+                    time.sleep(0.25)
+
+                elif pygame.joystick.Joystick(0).get_axis(1) >= 0.95 :        #move backward
+                    #self.msg = "move backward"
+                    self.server.send("move backward".encode(self.FORMAT))
+                    self.label_19.setText("Moving backward")
+                    time.sleep(0.25)
+
+                elif pygame.joystick.Joystick(0).get_axis(1) <= -0.95 :       #move forward
+                    #self.msg = "move forward"
+                    self.server.send("move forward".encode(self.FORMAT))
+                    self.label_19.setText("Moving forward")
+                    time.sleep(0.25)
+
+                
+                if pygame.joystick.Joystick(0).get_axis(3) >= 0.9 :        #roll right
+                    #self.msg = "move rolltoright"
+                    self.server.send("move rolltoright".encode(self.FORMAT))
+                    self.label_19.setText("Rolling right")
+                    time.sleep(0.25)
+                
+                elif pygame.joystick.Joystick(0).get_axis(3) <= -0.9 :       #roll left
+                    #self.msg = "move rolltoleft"
+                    self.server.send("move rolltoleft".encode(self.FORMAT))
+                    self.label_19.setText("Rolling left")
+                    time.sleep(0.25)
+
+                elif pygame.joystick.Joystick(0).get_axis(2) >= 0.9 :        #pitch up
+                    #self.msg = "move pitchup"
+                    self.server.send("move pitchup".encode(self.FORMAT))
+                    self.label_19.setText("Pitching up")
+                    time.sleep(0.25)
+
+                elif pygame.joystick.Joystick(0).get_axis(2) <= -0.9 :       #pitch down
+                    #self.msg = "move pitchdown"
+                    self.server.send("move pitchdown".encode(self.FORMAT))
+                    self.label_19.setText("Pitching down")
+                    time.sleep(0.25)
+
+                elif ((pygame.joystick.Joystick(0).get_axis(0) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(0) <= 0.2) and 
+                    (pygame.joystick.Joystick(0).get_axis(1) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(1) <= 0.2)  and
+                    (pygame.joystick.Joystick(0).get_axis(3) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(3) <= 0.2)  and 
+                    (pygame.joystick.Joystick(0).get_axis(2) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(2) <= 0.2))  :     #stops motion if both analogs are not at motion positions
                     #self.msg = "move stop"
                     self.server.send("move stop".encode(self.FORMAT))
                     self.label_19.setText("Static")
                     time.sleep(0.25)
 
-                    if self.sr == True:
-                        self.server.send("done slideright".encode(self.FORMAT))
-                        self.sr = False
-                        time.sleep(0.25)
-                    if self.sl == True:
-                        self.server.send("done slideleft".encode(self.FORMAT))
-                        self.sl = False
-                        time.sleep(0.25)
-                    if self.mu == True:
-                        self.server.send("done moveup".encode(self.FORMAT))
-                        self.mu = False
-                        time.sleep(0.25)
-                    if self.md == True:
-                        self.server.send("done movedown".encode(self.FORMAT))
-                        self.md = False
-                        time.sleep(0.25)
-
-                    
-
-
-                # if event.value == (1,0) and event.joy == 1:
-                #     print("right button is pressed on controller 1")
-                #     msg = "right button is pressed on controller 1"
-                #     server.send(msg.encode(FORMAT))
-                #     time.sleep(0.25)
-
-                # if event.value == (-1,0) and event.joy == 1:
-                #     print("left button is pressed on controller 1")
-                #     msg = "left button is pressed on controller 1"
-                #     server.send(msg.encode(FORMAT))
-                #     time.sleep(0.25)
-
-                # if event.value == (0,-1) and event.joy == 1:
-                #     print("down button is pressed on controller 1")
-                #     msg = "down button is pressed on controller 1"
-                #     server.send(msg.encode(FORMAT))
-                #     time.sleep(0.25)
-
-                # if event.value == (0,1) and event.joy == 1:
-                #     print("up button is pressed on controller 1")
-                #     msg = "up button is pressed on controller 1"
-                #     server.send(msg.encode(FORMAT))
-                #     time.sleep(0.25)
-
-    ###################################################################################################
-
-            if event.type == JOYAXISMOTION:          
-                if pygame.joystick.Joystick(0).get_axis(0) >= 0.9 :        #rotate right
-                    #print("move right from analog 0, controller 0")
-                    self.msg = "move yawcw"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    self.label_19.setText("Rotating right")
-                    self.rotr = True
-                    time.sleep(0.25)
-                
-                elif pygame.joystick.Joystick(0).get_axis(0) <= -0.9 :       #rotate left
-                    #print("move left from analog 0, controller 0")
-                    self.msg = "move yawccw"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    self.label_19.setText("Rotating left")
-                    self.rotl = True
-                    time.sleep(0.25)
-
-                elif pygame.joystick.Joystick(0).get_axis(1) >= 0.9 :        #move backward
-                    #print("move backward from analog 0, controller 0")
-                    if self.rotr == True:
-                        self.msg = "done rotateright"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.rotr = False
-                        time.sleep(0.25)
-                    if self.rotl == True:
-                        self.msg = "done rotateleft"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.rotl = False
-                        time.sleep(0.25)
-
-                    self.msg = "move backward"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    self.label_19.setText("Moving backward")
-                    time.sleep(0.25)
-
-
-                elif pygame.joystick.Joystick(0).get_axis(1) <= -0.9 :       #move forward
-                    #print("move forward from analog 0, controller 0")
-                    if self.rotr == True:
-                        self.msg = "done rotateright"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.rotr = False
-                        time.sleep(0.25)
-                    if self.rotl == True:
-                        self.msg = "done rotateleft"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.rotl = False
-                        time.sleep(0.25)
-
-                    self.msg = "move forward"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    self.label_19.setText("Moving forward")
-                    time.sleep(0.25)
-
-
+###################################################################################################
                 # if pygame.joystick.Joystick(1).get_axis(0) >= 0.75 :        
                 #     print("move right from analog 0, controller 1")
                 #     msg = "move right from analog 0, controller 1"
@@ -399,134 +315,6 @@ class MainApp(QMainWindow , FORM_CLASS):
                 #     msg = "move up from analog 0, controller 1"
                 #     server.send(msg.encode(FORMAT))
                 #     time.sleep(0.25)
-
-                
-                if pygame.joystick.Joystick(0).get_axis(3) >= 0.9 :        #roll right
-                    #print("move right from analog 1, controller 0")
-                    if self.pd == True:
-                        self.msg = "done pitchdown"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.pd = False
-                        time.sleep(0.25)
-                    if self.pu == True:
-                        self.msg = "done pitchup"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.pu = False
-                        time.sleep(0.25)
-
-                    self.msg = "move rolltoright"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    self.label_19.setText("Rolling right")
-                    self.rolr = True
-                    time.sleep(0.25)
-                
-
-
-                elif pygame.joystick.Joystick(0).get_axis(3) <= -0.9 :       #roll left
-                    #print("move left from analog 1, controller 0")
-                    if self.pd == True:
-                        self.msg = "done pitchdown"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.pd = False
-                        time.sleep(0.25)
-                    if self.pu == True:
-                        self.msg = "done pitchup"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.pu = False
-                        time.sleep(0.25)
-
-                    self.msg = "move rolltoleft"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    self.label_19.setText("Rolling left")
-                    self.roll = True
-                    time.sleep(0.25)
-
-
-
-                elif pygame.joystick.Joystick(0).get_axis(2) >= 0.9 :        #pitch up
-                    #print("move down from analog 1, controller 0")
-                    if self.rolr == True:
-                        self.msg = "done rollright"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.rolr = False
-                        time.sleep(0.25)
-                    if self.roll == True:
-                        self.msg = "done rollleft"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.roll = False
-                        time.sleep(0.25)
-
-                    self.msg = "move pitchup"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    self.label_19.setText("Pitching up")
-                    self.pu = True
-                    time.sleep(0.25)
-
-
-
-                elif pygame.joystick.Joystick(0).get_axis(2) <= -0.9 :       #pitch down
-                    #print("move up from analog 1, controller 0")
-                    if self.rolr == True:
-                        self.msg = "done rollright"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.rolr = False
-                        time.sleep(0.25)
-                    if self.roll == True:
-                        self.msg = "done rollleft"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.roll = False
-                        time.sleep(0.25)
-
-                    self.msg = "move pitchdown"
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    self.label_19.setText("Pitching down")
-                    self.pd = True
-                    time.sleep(0.25)
-
-
-
-                elif ((pygame.joystick.Joystick(0).get_axis(0) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(0) <= 0.2) and 
-                    (pygame.joystick.Joystick(0).get_axis(1) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(1) <= 0.2)  and
-                    (pygame.joystick.Joystick(0).get_axis(3) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(3) <= 0.2)  and 
-                    (pygame.joystick.Joystick(0).get_axis(2) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(2) <= 0.2))  :     #stops motion if both analogs are not at motion positions
-                    self.msg = "move stop"
-                    #print("move stop" + " : from analog 0 controller 0")
-                    self.server.send(self.msg.encode(self.FORMAT))
-                    self.label_19.setText("Static")
-                    time.sleep(0.25)
-                    
-                    if self.pd == True:
-                        self.msg = "done pitchdown"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.pd = False
-                        time.sleep(0.25)
-                    if self.pu == True:
-                        self.msg = "done pitchup"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.pu = False
-                        time.sleep(0.25)
-                    if self.rolr == True:
-                        self.msg = "done rollright"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.rolr = False
-                        time.sleep(0.25)
-                    if self.roll == True:
-                        self.msg = "done rollleft"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.roll = False
-                        time.sleep(0.25)
-                    if self.rotr == True:
-                        self.msg = "done rotateright"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.rotr = False
-                        time.sleep(0.25)
-                    if self.rotl == True:
-                        self.msg = "done rotateleft"
-                        self.server.send(self.msg.encode(self.FORMAT))
-                        self.rotl = False
-                        time.sleep(0.25)
-
-                    
 
                 # if pygame.joystick.Joystick(1).get_axis(3) >= 0.75 :
                 #     print("move right from analog 1, controller 1")
@@ -553,34 +341,12 @@ class MainApp(QMainWindow , FORM_CLASS):
                 #     time.sleep(0.25)
 
 
-
 ###################################################################################################
 ###################################################################################################
 
     def receive(self):
-        '''
-        #while True:
-        while self.connected:
-            print(self.connected)
-        #if self.connected:
-        
-            self.msg = self.server.recv(128).decode()
-            print(self.msg)
-            time.sleep(0.25)'''
-
         while True:
             if self.connected:
-                
-                # sockets_list = [sys.stdin, self.server]
-                # read_sockets,write_socket, error_socket = select.select(sockets_list,[],[])
-                # for socks in read_sockets:
-                #     if socks == self.server:
-                #         self.msg = (socks.recv(2048)).decode('utf-8')
-                #         print(self.msg)
-                #         if "pitch" in self.msg:
-                #             pitch = self.msg.split()
-                #             self.label_9.setText(pitch[1])
-
                 self.msg = (self.server.recv(2048)).decode('utf-8')
                 print(self.msg)
 
@@ -620,11 +386,4 @@ if __name__ == "__main__":
         except:
             pass
 
-        # try:
-        #     window.receive()
-        # except:
-        #     pass
-
-
     sys.exit(app.exec_())
-    
