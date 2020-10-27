@@ -4,7 +4,8 @@ import threading
 import pygame
 from pygame.locals import*
 import sys
-import select
+import os
+from os import path
 
 import PyQt5
 from PyQt5.QtGui import *
@@ -14,10 +15,6 @@ from PyQt5.uic import loadUiType
 from PyQt5 import QtCore
 from PyQt5.QtCore import QCoreApplication
 
-#import os#
-import os
-from os import path
-
 FORM_CLASS, _ = loadUiType(path.join(path.dirname(__file__), "client1.ui"))
 
 class MainApp(QMainWindow , FORM_CLASS):
@@ -26,11 +23,10 @@ class MainApp(QMainWindow , FORM_CLASS):
         QMainWindow.__init__(self)
 
         self.FORMAT = 'utf-8'
-        self.DISCONNECT_MSG = "!DISCONNECT"
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         pygame.init()
-        #self.screen = pygame.display.set_mode((640,480))
+        self.screen = pygame.display.set_mode((1,1))
         #pygame.display.set_caption("Joystick Testing")
         #pygame.display.iconify()
 
@@ -43,7 +39,7 @@ class MainApp(QMainWindow , FORM_CLASS):
             print("initialized joystick",i)
 
         self.speed = 0
-        self.RUN = True
+        # self.RUN = True
         self.msg = msg
         self.connected = False
         
@@ -70,7 +66,7 @@ class MainApp(QMainWindow , FORM_CLASS):
         if self.connected:
             self.msg = "[DISCONNECTING] Disconnecting Client."
             self.server.send(self.msg.encode(self.FORMAT))
-            time.sleep(0.25)
+            time.sleep(0.15)
             self.server.close()
             self.label_14.setText("Disconnected")
             self.label_19.setText("Static")
@@ -85,7 +81,6 @@ class MainApp(QMainWindow , FORM_CLASS):
         
     def start(self):
         try:
-            
             PORT = self.lineEdit_2.text()
             PORT = int(PORT)
             IP = self.lineEdit.text()
@@ -99,6 +94,7 @@ class MainApp(QMainWindow , FORM_CLASS):
 
         if self.connected == True:
             self.label_14.setText("Connected")
+            self.label_4.setText("90")
             self.lineEdit_2.setReadOnly(True)
             self.lineEdit.setReadOnly(True)
             
@@ -109,15 +105,10 @@ class MainApp(QMainWindow , FORM_CLASS):
 
             # if event.type == pygame.QUIT:
             #     print ("Received event 'Quit', exiting.")
-            #     #sys.exit()
-            #     self.RUN = False
             #     break
 
-            # if event.type == KEYDOWN and event.key == K_ESCAPE :
-            #     print ("Escape key pressed, exiting.")
-            #     #sys.exit()
-            #     self.RUN = False
-            #     break
+            if event.type == KEYDOWN and event.key == K_KP_ENTER :
+                self.start()
 
             if event.type == JOYBUTTONDOWN:
 
@@ -125,110 +116,101 @@ class MainApp(QMainWindow , FORM_CLASS):
                 #     print("button 0 is pressed on controller 0")
                 #     self.msg = "button 0 is pressed on controller 0"
                 #     self.server.send(self.msg.encode(self.FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
 
                 # if event.button == 1 and event.joy == 0:
                 #     print("button 1 is pressed on controller 0")
                 #     self.msg = "button 1 is pressed on controller 0"
                 #     self.server.send(self.msg.encode(self.FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
 
-                # if event.button == 2 and event.joy == 0:        
-                #     print("button 2 is pressed on controller 0")
-                #     self.msg = "button 2 is pressed on controller 0"
-                #     self.server.send(self.msg.encode(self.FORMAT))
-                #     time.sleep(0.25)
+                #if event.button == 2 and event.joy == 0:        #connects when pressing x button on controller 0    
+                    #self.start()
 
                 # if event.button == 3 and event.joy == 0:
                 #     print("button 3 is pressed on controller 0")
                 #     self.msg = "button 3 is pressed on controller 0"
                 #     self.server.send(self.msg.encode(self.FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
 
                 # if event.button == 4 and event.joy == 0:
                 #     print("button 4 is pressed on controller 0")
                 #     self.msg = "button 4 is pressed on controller 0"
                 #     self.server.send(self.msg.encode(self.FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
 
                 # if event.button == 5 and event.joy == 0:
                 #     print("button 5 is pressed on controller 0")
                 #     self.msg = "button 5 is pressed on controller 0"
                 #     self.server.send(self.msg.encode(self.FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
 
                 if event.button == 6 and event.joy == 0:            #speed down
                     self.speed = self.speed - 30
                     if self.speed <= 0 :
                         self.speed = 0
                     self.msg = "speed " + str(self.speed)
-                    print(self.msg)
                     self.server.send(self.msg.encode(self.FORMAT))
-                    self.label_4.setText(str(self.speed))
-                    time.sleep(0.25)
+                    self.label_4.setText(str(self.speed+90))
+                    time.sleep(0.15)
                     
-                if event.button == 7 and event.joy == 0:                #speed up                
+                if event.button == 7 and event.joy == 0:            #speed up                
                     self.speed = self.speed +30
-                    if self.speed >= 400 :
-                        self.speed = 400
+                    if self.speed >= 150 :
+                        self.speed = 150
                     self.msg = "speed " + str(self.speed)
-                    print(self.msg)
                     self.server.send(self.msg.encode(self.FORMAT))
-                    self.label_4.setText(str(self.speed))
-                    time.sleep(0.25)
+                    self.label_4.setText(str(self.speed+90))
+                    time.sleep(0.15)
                 
                 # if event.button == 8 and event.joy == 0:
                 #     print("button 8 is pressed on controller 0")
                 #     self.msg = "button 8 is pressed on controller 0"
                 #     self.server.send(self.msg.encode(self.FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
                     
-                # if event.button == 9 and event.joy == 0:
-                #     print("button 9 is pressed on controller 0")
-                #     self.msg = "button 9 is pressed on controller 0"
-                #     self.server.send(self.msg.encode(self.FORMAT))
-                #     time.sleep(0.25)
+                if event.button == 9 and event.joy == 0:        #connects when pressing start button on controller 0   
+                    self.start()
 
                 # if event.button == 10 and event.joy == 0:
                 #     print("button 10 is pressed on controller 0")
                 #     self.msg = "button 10 is pressed on controller 0"
                 #     self.server.send(self.msg.encode(self.FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
 
                 # if event.button == 11 and event.joy == 0:
                 #     print("button 11 is pressed on controller 0")
                 #     self.msg = "button 11 is pressed on controller 0"
                 #     self.server.send(self.msg.encode(self.FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
                     
 #############################################################################################################
 
             if event.type == JOYHATMOTION:
                 if event.value == (1,0) and event.joy == 0:             #slide right
-                    print("right button is pressed on controller 0")
                     self.server.send("move right".encode(self.FORMAT))
                     self.label_19.setText("Sliding right")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
 
                 elif event.value == (-1,0) and event.joy == 0:            #slide left
                     self.server.send("move left".encode(self.FORMAT))
                     self.label_19.setText("Sliding left")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
 
                 elif event.value == (0,-1) and event.joy == 0:            #move down
                     self.server.send("move down".encode(self.FORMAT))
                     self.label_19.setText("Descending")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
 
                 elif event.value == (0,1) and event.joy == 0:             #move up
                     self.server.send("move up".encode(self.FORMAT))
                     self.label_19.setText("Ascending")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
 
                 elif event.value == (0,0) and event.joy == 0:           #stops motion when you remove your hard from button
                     self.server.send("move stop".encode(self.FORMAT))
                     self.label_19.setText("Static")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
 
     ###################################################################################################
 
@@ -237,50 +219,50 @@ class MainApp(QMainWindow , FORM_CLASS):
                     #self.msg = "move yawcw"
                     self.server.send("move yawcw".encode(self.FORMAT))
                     self.label_19.setText("Rotating right")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
                 
                 elif pygame.joystick.Joystick(0).get_axis(0) <= -0.95 :       #rotate left
                     #self.msg = "move yawccw"
                     self.server.send("move yawccw".encode(self.FORMAT))
                     self.label_19.setText("Rotating left")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
 
                 elif pygame.joystick.Joystick(0).get_axis(1) >= 0.95 :        #move backward
                     #self.msg = "move backward"
                     self.server.send("move backward".encode(self.FORMAT))
                     self.label_19.setText("Moving backward")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
 
                 elif pygame.joystick.Joystick(0).get_axis(1) <= -0.95 :       #move forward
                     #self.msg = "move forward"
                     self.server.send("move forward".encode(self.FORMAT))
                     self.label_19.setText("Moving forward")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
 
                 
                 if pygame.joystick.Joystick(0).get_axis(3) >= 0.9 :        #roll right
                     #self.msg = "move rolltoright"
                     self.server.send("move rolltoright".encode(self.FORMAT))
                     self.label_19.setText("Rolling right")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
                 
                 elif pygame.joystick.Joystick(0).get_axis(3) <= -0.9 :       #roll left
                     #self.msg = "move rolltoleft"
                     self.server.send("move rolltoleft".encode(self.FORMAT))
                     self.label_19.setText("Rolling left")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
 
                 elif pygame.joystick.Joystick(0).get_axis(2) >= 0.9 :        #pitch up
                     #self.msg = "move pitchup"
                     self.server.send("move pitchup".encode(self.FORMAT))
                     self.label_19.setText("Pitching up")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
 
                 elif pygame.joystick.Joystick(0).get_axis(2) <= -0.9 :       #pitch down
                     #self.msg = "move pitchdown"
                     self.server.send("move pitchdown".encode(self.FORMAT))
                     self.label_19.setText("Pitching down")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
 
                 elif ((pygame.joystick.Joystick(0).get_axis(0) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(0) <= 0.2) and 
                     (pygame.joystick.Joystick(0).get_axis(1) >= -0.2) and (pygame.joystick.Joystick(0).get_axis(1) <= 0.2)  and
@@ -289,56 +271,56 @@ class MainApp(QMainWindow , FORM_CLASS):
                     #self.msg = "move stop"
                     self.server.send("move stop".encode(self.FORMAT))
                     self.label_19.setText("Static")
-                    time.sleep(0.25)
+                    time.sleep(0.15)
 
 ###################################################################################################
                 # if pygame.joystick.Joystick(1).get_axis(0) >= 0.75 :        
                 #     print("move right from analog 0, controller 1")
                 #     msg = "move right from analog 0, controller 1"
                 #     server.send(msg.encode(FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
                 
                 # if pygame.joystick.Joystick(1).get_axis(0) <= -0.75 :
                 #     print("move left from analog 0, controller 1")
                 #     msg = "move left from analog 0, controller 1"
                 #     server.send(msg.encode(FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
 
                 # if pygame.joystick.Joystick(1).get_axis(1) >= 0.75 :
                 #     print("move down from analog 0, controller 1")
                 #     msg = "move down from analog 0, controller 1"
                 #     server.send(msg.encode(FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
 
                 # if pygame.joystick.Joystick(1).get_axis(1) <= -0.75 :
                 #     print("move up from analog 0, controller 1")
                 #     msg = "move up from analog 0, controller 1"
                 #     server.send(msg.encode(FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
 
                 # if pygame.joystick.Joystick(1).get_axis(3) >= 0.75 :
                 #     print("move right from analog 1, controller 1")
                 #     msg = "move right from analog 1, controller 1"
                 #     server.send(msg.encode(FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
                 
                 # if pygame.joystick.Joystick(1).get_axis(3) <= -0.75 :
                 #     print("move left from analog 1, controller 1")
                 #     msg = "move left from analog 1, controller 1"
                 #     server.send(msg.encode(FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
 
                 # if pygame.joystick.Joystick(1).get_axis(2) >= 0.75 :
                 #     print("move down from analog 1, controller 1")
                 #     msg = "move down from analog 1, controller 1"
                 #     server.send(msg.encode(FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
 
                 # if pygame.joystick.Joystick(1).get_axis(2) <= -0.75 :
                 #     print("move up from analog 1, controller 1")
                 #     msg = "move up from analog 1, controller 1"
                 #     server.send(msg.encode(FORMAT))
-                #     time.sleep(0.25)
+                #     time.sleep(0.15)
 
 
 ###################################################################################################
@@ -380,6 +362,7 @@ if __name__ == "__main__":
     window.show()       #shows the window
     #app.exec_()         #infinite loop
     
+    #while True:
     while True:
         try:
             window.send_msg()
