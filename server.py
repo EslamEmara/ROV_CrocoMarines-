@@ -13,6 +13,7 @@ server.bind((IP, PORT))
 
 server.listen(100)
 print("[LISTENING] server is listening...")
+print("[IP]", IP)
 
 clients = []
 
