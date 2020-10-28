@@ -158,7 +158,8 @@ def clamp(n, minn, maxn):           ##function to limit the speed of the motors 
 # if status == 0x01:
     # print('System error: {0}'.format(error))
     # print('See datasheet section 4.3.59 for the meaning.')
-
+temperature = 0
+depth_actual_value = 0
 while True:
     # get the speed from gui
     recieve_msgs()
@@ -167,13 +168,8 @@ while True:
     pitch_actual_value = int(input('actual pitch position = '))
     rotate_actual_value = int(input('actual rotate position = '))
     #depth_actual_value,temperature = p_sensor.calculate_depth()
-
-    pid_gui.send_msg("roll "+str(roll_actual_value))
-    pid_gui.send_msg("pitch "+str(pitch_actual_value))
-    pid_gui.send_msg("rotate "+str(rotate_actual_value))
-    #pid_gui.send_msg("height "+str(depth_actual_value))
-    #pid_gui.send_msg("temp "+str(temperature))
-
+    pid_gui.send_msg("angel"+str(pitch_actual_value)+str(roll_actual_value)\
+        +str(rotate_actual_value)+str(temperature) +str(depth_actual_value))
 
     # Read the Euler angles for heading, roll, pitch (all in degrees).
     # rotate_actual_value, roll_actual_value, pitch_actual_value = imu.read_euler()
