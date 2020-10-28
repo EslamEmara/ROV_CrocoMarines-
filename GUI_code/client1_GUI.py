@@ -43,6 +43,7 @@ class MainApp(QMainWindow , FORM_CLASS):
         #self.RUN = True
         self.msg = msg
         self.connected = False
+        self.micro_active = False
         
         thread_02 = threading.Thread(target = self.receive, args=())
         thread_02.start()
@@ -66,7 +67,7 @@ class MainApp(QMainWindow , FORM_CLASS):
 
     def Handel_UI(self):
         self.setWindowTitle('Croco GUI')
-        self.setFixedSize(747, 530)
+        self.setFixedSize(751, 570)
         self.lineEdit_2.setMaxLength(5)
         self.lineEdit.setMaxLength(13)
         self.lineEdit_2.setValidator(QIntValidator())
@@ -82,7 +83,9 @@ class MainApp(QMainWindow , FORM_CLASS):
             time.sleep(0.15)
             self.server.close()
             self.label_14.setText("Disconnected")
+            self.label_24.setText("Disconnected")
             self.label_19.setText("Static")
+            self.label_21.setText("Static")
             self.label_4.setText("")
             self.label_9.setText("")
             self.label_8.setText("")
@@ -176,6 +179,15 @@ class MainApp(QMainWindow , FORM_CLASS):
                 if event.button == 9 and event.joy == 0:        #connects when start button on controller 0 is pressed 
                     self.start()
 
+                if event.button == 9 and event.joy == 1:        #Activates micro ROV when start is pressed on controller 1
+                    self.micro_active = True
+                    if self.connected:
+                        self.label_24.setText("Connected")
+
+                if event.button == 8 and event.joy == 1:        #Deactivates micro ROV when select is pressed on controller 1
+                    self.micro_active = False
+                    self.label_24.setText("Disconnected")
+
                 # if event.button == 10 and event.joy == 0:
                 #     print("button 10 is pressed on controller 0")
                 #     self.msg = "button 10 is pressed on controller 0"
@@ -230,7 +242,7 @@ class MainApp(QMainWindow , FORM_CLASS):
     ###################################################################################################
 
             if event.type == JOYAXISMOTION:          
-                if pygame.joystick.Joystick(0).get_axis(0) >= 0.95 :        #rotate right
+                if pygame.joystick.Joystick(0).get_axis(0) >= 0.98 :        #rotate right
                     self.server.send("move yawcw".encode(self.FORMAT))
                     self.label_19.setText("Rotating right")
                     time.sleep(0.15)
@@ -240,7 +252,7 @@ class MainApp(QMainWindow , FORM_CLASS):
                     self.label_19.setText("Rotating left")
                     time.sleep(0.15)
 
-                elif pygame.joystick.Joystick(0).get_axis(1) >= 0.95 :        #move backward
+                elif pygame.joystick.Joystick(0).get_axis(1) >= 0.98 :        #move backward
                     self.server.send("move backward".encode(self.FORMAT))
                     self.label_19.setText("Moving backward")
                     time.sleep(0.15)
@@ -250,7 +262,7 @@ class MainApp(QMainWindow , FORM_CLASS):
                     self.label_19.setText("Moving forward")
                     time.sleep(0.15)
                 
-                elif pygame.joystick.Joystick(0).get_axis(3) >= 0.95 :        #roll right
+                elif pygame.joystick.Joystick(0).get_axis(3) >= 0.98 :        #roll right
                     self.server.send("move rolltoright".encode(self.FORMAT))
                     self.label_19.setText("Rolling right")
                     time.sleep(0.15)
@@ -260,7 +272,7 @@ class MainApp(QMainWindow , FORM_CLASS):
                     self.label_19.setText("Rolling left")
                     time.sleep(0.15)
 
-                elif pygame.joystick.Joystick(0).get_axis(2) >= 0.95 :        #pitch up
+                elif pygame.joystick.Joystick(0).get_axis(2) >= 0.98 :        #pitch up
                     self.server.send("move pitchup".encode(self.FORMAT))
                     self.label_19.setText("Pitching up")
                     time.sleep(0.15)
@@ -270,12 +282,41 @@ class MainApp(QMainWindow , FORM_CLASS):
                     self.label_19.setText("Pitching down")
                     time.sleep(0.15)
 
-                elif ((pygame.joystick.Joystick(0).get_axis(0) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(0) <= 0.1) and 
-                    (pygame.joystick.Joystick(0).get_axis(1) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(1) <= 0.1)  and
-                    (pygame.joystick.Joystick(0).get_axis(3) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(3) <= 0.1)  and 
-                    (pygame.joystick.Joystick(0).get_axis(2) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(2) <= 0.1))  :     #stops motion if both analogs are not at motion positions
-                    self.server.send("move stop".encode(self.FORMAT))
+                elif ((pygame.joystick.Joystick(1).get_axis(0) >= -0.1) and (pygame.joystick.Joystick(1).get_axis(0) <= 0.1) and
+                    (pygame.joystick.Joystick(1).get_axis(1) >= -0.1) and (pygame.joystick.Joystick(1).get_axis(1) <= 0.1)   and
+                    (pygame.joystick.Joystick(1).get_axis(3) >= -0.1) and (pygame.joystick.Joystick(1).get_axis(3) <= 0.1)   and 
+                    (pygame.joystick.Joystick(1).get_axis(2) >= -0.1) and (pygame.joystick.Joystick(1).get_axis(2) <= 0.1)   and
+                    (pygame.joystick.Joystick(0).get_axis(0) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(0) <= 0.1)   and 
+                    (pygame.joystick.Joystick(0).get_axis(1) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(1) <= 0.1)   and
+                    (pygame.joystick.Joystick(0).get_axis(3) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(3) <= 0.1)   and 
+                    (pygame.joystick.Joystick(0).get_axis(2) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(2) <= 0.1)) :     
+                    self.server.send("move stop".encode(self.FORMAT))     #stops ROV motion if both analogs are not at motion positions
                     self.label_19.setText("Static")
+                    time.sleep(0.15)
+
+###################################################################################################
+
+            if (event.type == JOYAXISMOTION) and (self.micro_active == True):
+                if pygame.joystick.Joystick(1).get_axis(1) >= 0.98 :        #move micro ROV backward
+                    self.server.send("micro backward".encode(self.FORMAT))
+                    self.label_21.setText("Backward")
+                    time.sleep(0.15)
+
+                elif pygame.joystick.Joystick(1).get_axis(1) <= -0.99 :       #move micro ROV forward
+                    self.server.send("micro forward".encode(self.FORMAT))
+                    self.label_21.setText("Forward")
+                    time.sleep(0.15)
+
+                elif ((pygame.joystick.Joystick(1).get_axis(0) >= -0.1) and (pygame.joystick.Joystick(1).get_axis(0) <= 0.1) and
+                    (pygame.joystick.Joystick(1).get_axis(1) >= -0.1) and (pygame.joystick.Joystick(1).get_axis(1) <= 0.1)   and
+                    (pygame.joystick.Joystick(1).get_axis(3) >= -0.1) and (pygame.joystick.Joystick(1).get_axis(3) <= 0.1)   and 
+                    (pygame.joystick.Joystick(1).get_axis(2) >= -0.1) and (pygame.joystick.Joystick(1).get_axis(2) <= 0.1)   and
+                    (pygame.joystick.Joystick(0).get_axis(0) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(0) <= 0.1)   and 
+                    (pygame.joystick.Joystick(0).get_axis(1) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(1) <= 0.1)   and
+                    (pygame.joystick.Joystick(0).get_axis(3) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(3) <= 0.1)   and 
+                    (pygame.joystick.Joystick(0).get_axis(2) >= -0.1) and (pygame.joystick.Joystick(0).get_axis(2) <= 0.1)) :
+                    self.server.send("micro stop".encode(self.FORMAT))   #stops micro ROV motion if both analogs are not at motion positions
+                    self.label_21.setText("Static")
                     time.sleep(0.15)
 
 ###################################################################################################
@@ -335,25 +376,13 @@ class MainApp(QMainWindow , FORM_CLASS):
                 self.msg = (self.server.recv(2048)).decode('utf-8')
                 print(self.msg)
 
-                if "pitch" in self.msg:
-                    pitch = self.msg.split()
-                    self.label_9.setText(pitch[1])
-
-                if "roll" in self.msg:
-                    roll = self.msg.split()
-                    self.label_8.setText(roll[1])
-            
-                if "rotate" in self.msg:
-                    rotate = self.msg.split()
-                    self.label_5.setText(rotate[1])
-
-                if "temp" in self.msg:
-                    temp = self.msg.split()
-                    self.label_7.setText(temp[1])
-
-                if "hight" in self.msg:
-                    hight = self.msg.split()
-                    self.label_6.setText(hight[1])
+                if "angel" in self.msg:
+                    angel = self.msg.split()
+                    self.label_9.setText(angel[1])
+                    self.label_8.setText(angel[2])
+                    self.label_5.setText(angel[3])
+                    self.label_7.setText(angel[4])
+                    self.label_6.setText(angel[5])
 
 ###################################################################################################
 
