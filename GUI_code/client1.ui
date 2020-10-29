@@ -882,7 +882,7 @@ font: 75 italic 14pt &quot;Comic Sans MS&quot;;
     padding: 2px;</string>
     </property>
     <property name="text">
-     <string>192.168.1.5</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_2">
@@ -911,7 +911,7 @@ font: 75 italic 14pt &quot;Comic Sans MS&quot;;
     padding: 2px;</string>
     </property>
     <property name="text">
-     <string>8000</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="label_23">
