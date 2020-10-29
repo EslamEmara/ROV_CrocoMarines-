@@ -28,5 +28,6 @@ class MotionClass():
         while True:
             self.msg = self.server.recv(128).decode()
             self.ObjectFromMotion.MainROV(self.msg.lower())  # send msg to Main rov
-            # self.ObjectFromMotion.MicroROV(self.msg)  # send msg to Main rov
+            self.ObjectFromMotion.MicroROV(self.msg.lower())  # send msg to Main rov
             #print(msg)
+            

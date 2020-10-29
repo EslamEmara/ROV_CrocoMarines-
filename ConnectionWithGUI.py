@@ -6,10 +6,12 @@ import time
 CurrentDirection=""
 class Control:
     def __init__(self):
-       self.rov=Direction()                        #object from the directions class
-       self.cam = camera()                         #object from the camera control class
-       self.servoforgripper = Servo()             #object for main gripper direction class
-       self.DC=addDCMotor()                       #object for Dc motor class
+       self.rov=Direction()                             #object from the directions class
+       self.cam = camera()                              #object from the camera control class
+       self.servoforgripper = Servo()                   #object for main gripper direction class
+       self.DC=addDCMotor(14,15)                        #object for Dc motor class
+       self.MicroDC=addDCMotor(20,21)                   #dc motor for micro gripper
+       self.MicroMotor=addDCMotor(17,27)                #motor for micro rov motion
        return
     def MainROV(self,msg):
         array = msg.split()
@@ -126,18 +128,37 @@ class Control:
 #########################################################  main grippers's switch ###########################################################
 ###########################################################################################################################################
 
-        elif (array[0] == "gripper"):
+        elif (array[0] == "grip"):
             if (array[1] == "close"):                # gripper close
-                self.DC.stop()
+                self.DC.Run()
+                self.DC.forward()
             elif (array[1] == "open"):               # grippers open
                 self.DC.Run()
-
-###########################################################################################################################################
-#########################################################  main grippers's motion ###########################################################
-###########################################################################################################################################
-
-        elif (array[0] == "dcmicro"):
-            if (array[1] == "forward"):                 # gripper move forward
-                self.DC.forward()
-            elif (array[1] == "backward"):              # grippers move backward
                 self.DC.Backward()
+            elif (array[1]=="hold"):                 #gripper hold at its position
+                self.DC.stop()    
+###############################################################################################################################################
+###############################################################################################################################################
+###############################################################################################################################################
+###############################################################################################################################################
+###############################################################################################################################################
+
+    def MicroROV (self,msg):
+        array = msg.split()
+        if (array[0] == "micro"):
+            if (array[1] == "forward"):                            #micro rov goes forward
+                self.MicroMotor.Run()
+                self.MicroMotor.forward()
+            elif (array[1] == "backward"):                         #micro rov goes backward                                       
+                self.MicroMotor.Run()
+                self.MicroMotor.Backward()
+            elif  (array[1] == "stop"):                            #micro rov stops
+                self.MicroMotor.stop()             
+            elif (array[1] == "close"):                            # micro rov gripper close
+                self.MicroDC.Run()
+                self.MicroDC.forward()
+            elif (array[1] == "open"):                             # micro rov gripper open
+                self.MicroDC.Run()
+                self.MicroDC.Backward()
+            elif (array[1] == "hold" ):                             #holds the gripper position      
+                self.MicroDC.stop()   

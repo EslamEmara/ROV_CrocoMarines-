@@ -4,7 +4,7 @@
 import RPi.GPIO as GPIO
 import time
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(11,GPIO.OUT)
+GPIO.setup(15,GPIO.OUT)
 
 camera_pos=7
 class camera :
@@ -13,7 +13,7 @@ class camera :
 #we intialize the servo with duty cycle 7 to make it horizontally 90 degree then we can either increase it to 180 or decrease it to 0 degree
     def __init__ (self) :
         
-        self.servo = GPIO.PWM(11,50)                                  #intializing the servo with frequency 50hz and duty cycle 0 "stopped"
+        self.servo = GPIO.PWM(15,50)                                  #intializing the servo with frequency 50hz and duty cycle 0 "stopped"
         self.servo.start(0)
     def camup(self):
         global camera_pos
