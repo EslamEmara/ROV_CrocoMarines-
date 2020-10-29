@@ -334,13 +334,13 @@ class MainApp(QMainWindow , FORM_CLASS):        #defining the class MainApp and 
                 self.msg = (self.server.recv(2048)).decode('utf-8')
                 print(self.msg)     #print message
 
-                if "angel" in self.msg:             #checks on the message if it is the message the imu will send "angel pitch roll rotate temp hight"
-                    angel = self.msg.split()        #splits the message with space
-                    self.label_9.setText(angel[1])  #puts the values on the labels in gui
-                    self.label_8.setText(angel[2])
-                    self.label_5.setText(angel[3])
-                    self.label_7.setText(angel[4])
-                    self.label_6.setText(angel[5])
+                if "angle" in self.msg:             #checks on the message if it is the message the imu will send "angle pitch roll rotate temp hight"
+                    angle = self.msg.split()        #splits the message with space
+                    self.label_9.setText(angle[1])  #puts the values on the labels in gui
+                    self.label_8.setText(angle[2])
+                    self.label_5.setText(angle[3])
+                    self.label_7.setText(angle[4])
+                    self.label_6.setText(angle[5])
 
 ###################################################################################################
 
