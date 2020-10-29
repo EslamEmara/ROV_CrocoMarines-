@@ -1,6 +1,6 @@
 import  RPi.GPIO as GPIO
 import time
-GPIO.setmode(GPIO.BCM)    
+GPIO.setmode(GPIO.Board)
 
 class addDCMotor:
     def __init__(self,pin1,pin2):                  # one for Dc pwm, and another for direction

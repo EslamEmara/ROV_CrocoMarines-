@@ -2,7 +2,7 @@
 
 import  RPi.GPIO as GPIO
 import time
-GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.Board)
 class Servo:
     def __init__(self):
         self.pin = 13
