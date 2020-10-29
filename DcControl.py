@@ -4,11 +4,11 @@ GPIO.setmode(GPIO.Board)
 
 class addDCMotor:
     def __init__(self,pin1,pin2):                  # one for Dc pwm, and another for direction
-        self.pins=[pin1,pin2]
+       self.pins=[pin1,pin2]
        for i in range (2):
            GPIO.setup(self.pins[i], GPIO.OUT)
            print("set the mode of pins", self.pins[i])
-       self.pwm=GPIO.PWM(pins[0],100)
+       self.pwm=GPIO.PWM(self.pins[0],100)
        self.pwm.start(0)
        time.sleep(0.5)
 
