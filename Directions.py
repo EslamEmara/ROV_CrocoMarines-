@@ -2,10 +2,10 @@ import pigpio
 pi = pigio.pi()
 import time
 from motion_initialization import addmotor
-from press_sensor import p_sensor
+# from press_sensor import p_sensor
 pins = [23,24,25,8,7,1,12,16]   #the pins in Board mode
 class Direction :
-    depth = 0
+    # depth = 0
     def __init__(self):
         for i in range(8) :
           # pi.set_mode(pins[i], pigpio.OUTPUT)
@@ -95,8 +95,8 @@ class Direction :
         self.motor6.cw(addition_speed)
         self.motor7.cw(addition_speed)
         self.motor8.ccw(addition_speed)
-        global depth
-        depth = p_sensor.calculate_depth()
+        # global depth
+        # depth = p_sensor.calculate_depth()
         return
 
 # Down:
@@ -112,8 +112,8 @@ class Direction :
         self.motor6.ccw(addition_speed)
         self.motor7.ccw(addition_speed)
         self.motor8.cw(addition_speed)
-        global depth
-        depth = p_sensor.calculate_depth()
+        # global depth
+        # depth = p_sensor.calculate_depth()
         return
 
 # Roll to right (x):
