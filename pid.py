@@ -60,29 +60,29 @@ def recieve_msgs():
     if msg:
         print ('message here =' ,msg)
     ## check for moves done by the pilot and setting flags##
-    if ("yawcw" in msg or "yawccw" in msg):
-        ROV_rolling = True 
-        #ROV_pitching = False
-    elif ("pitchup" in msg or "pitchdown" in msg):
-        ROV_pitching = True
-        #ROV_rolling = False
-    elif ("rotatetoleft" in msg or "rotatetoright" in msg):
-        ROV_rotating = True    
-    elif ("up" in msg or "down" in msg):
-        ROV_height_change = True 
-    
-    if ("move" in msg):
-        if("stop" in msg):              ## no button pressed
-            ROV_is_moving = False
-            ROV_speed = 0
-        elif (("left" in msg or "right" in msg or "backward" in msg or "forward") in msg): ###other moves
-            ROV_is_moving = True
-            ROV_pitching = False
-            ROV_rolling = False
-            ROV_rotating = False
-            ROV_height_change = False
-    if ('speed' in msg):                        ## get the int speed from the message speed (n)
-        ROV_speed = int(''.join(x for x in msg if x.isdigit()))
+        if ("yawcw" in msg or "yawccw" in msg):
+            ROV_rolling = True 
+            #ROV_pitching = False
+        elif ("pitchup" in msg or "pitchdown" in msg):
+            ROV_pitching = True
+            #ROV_rolling = False
+        elif ("rotatetoleft" in msg or "rotatetoright" in msg):
+            ROV_rotating = True    
+        elif ("up" in msg or "down" in msg):
+            ROV_height_change = True 
+        
+        if ("move" in msg):
+            if("stop" in msg):              ## no button pressed
+                ROV_is_moving = False
+                ROV_speed = 0
+            elif (("left" in msg or "right" in msg or "backward" in msg or "forward") in msg): ###other moves
+                ROV_is_moving = True
+                ROV_pitching = False
+                ROV_rolling = False
+                ROV_rotating = False
+                ROV_height_change = False
+        if ('speed' in msg):                        ## get the int speed from the message speed (n)
+            ROV_speed = int(''.join(x for x in msg if x.isdigit()))
 
 def get_data_test():
     roll = int(input('current imu roll reading='))
@@ -168,8 +168,8 @@ while True:
     pitch_actual_value = int(input('actual pitch position = '))
     rotate_actual_value = int(input('actual rotate position = '))
     #depth_actual_value,temperature = p_sensor.calculate_depth()
-    pid_gui.send_msg("angel"+str(pitch_actual_value)+str(roll_actual_value)\
-        +str(rotate_actual_value)+str(temperature) +str(depth_actual_value))
+    pid_gui.send_msg("angle"+' '+str(pitch_actual_value)+' '+str(roll_actual_value)\
+        +' '+str(rotate_actual_value)+' '+str(temperature) +' '+str(depth_actual_value))
 
     # Read the Euler angles for heading, roll, pitch (all in degrees).
     # rotate_actual_value, roll_actual_value, pitch_actual_value = imu.read_euler()
