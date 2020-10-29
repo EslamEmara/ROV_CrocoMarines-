@@ -1,4 +1,4 @@
-from ConnectionWithGUI import ControlMotion
+from ConnectionWithGUI import Control
 import socket
 import threading
 
@@ -13,7 +13,7 @@ class MotionClass():
         msg = ''
         self.msg = msg
 
-        self.ObjectFromMotion=ControlMotion()  # take object from motion part
+        self.ObjectFromMotion=Control()  # take object from motion part
 
         try:
             self.server.connect(ADDR)
@@ -27,5 +27,6 @@ class MotionClass():
     def receive(self):
         while True:
             self.msg = self.server.recv(128).decode()
-            self.ObjectFromMotion.DirectionofTravel(self.msg)  # send msg to Motion Part
+            self.ObjectFromMotion.MainROV(self.msg.lower())  # send msg to Main rov
+            # self.ObjectFromMotion.MicroROV(self.msg)  # send msg to Main rov
             #print(msg)

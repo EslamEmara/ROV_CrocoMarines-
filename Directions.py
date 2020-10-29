@@ -1,9 +1,11 @@
-#import pigpio
-#pi = pigio.pi()
+import pigpio
+pi = pigio.pi()
 import time
 from motion_initialization import addmotor
-pins = [3,5,7,11,13,15,8,10]   #the pin 11 for servo for clapper
+from press_sensor import p_sensor
+pins = [23,24,25,8,7,1,12,16]   #the pins in Board mode
 class Direction :
+    depth = 0
     def __init__(self):
         for i in range(8) :
           # pi.set_mode(pins[i], pigpio.OUTPUT)
@@ -16,7 +18,7 @@ class Direction :
         self.motor6 = addmotor(pins[5])
         self.motor7 = addmotor(pins[6])
         self.motor8 = addmotor(pins[7])
-        time.sleep(7)
+        time.sleep(2)
         print("motors are ready >>>")
         return
 
@@ -93,6 +95,8 @@ class Direction :
         self.motor6.cw(addition_speed)
         self.motor7.cw(addition_speed)
         self.motor8.ccw(addition_speed)
+        global depth
+        depth = p_sensor.calculate_depth()
         return
 
 # Down:
@@ -108,6 +112,8 @@ class Direction :
         self.motor6.ccw(addition_speed)
         self.motor7.ccw(addition_speed)
         self.motor8.cw(addition_speed)
+        global depth
+        depth = p_sensor.calculate_depth()
         return
 
 # Roll to right (x):
@@ -199,6 +205,8 @@ class Direction :
         self.motor7.stop()
         self.motor8.stop()
         return
+
+
     def Stop(self):
         print("motors are stopped")
         self.motor1.stop()
@@ -211,4 +219,3 @@ class Direction :
         self.motor8.stop()
 
         return
-#clapper motion ...
